@@ -1,0 +1,119 @@
+//brayden
+	
+    class GroceryList {
+        private class ListNode {
+        GroceryItem data;
+        ListNode link;
+
+        // Default constructor
+        public ListNode() {
+            this.data = null;
+            this.link = null;
+        }
+
+        // Parameterized constructor
+        public ListNode(GroceryItem data) {
+            this.data = data;
+            this.link = null;
+        }
+    }
+
+    private ListNode head;
+    private ListNode current;
+    private ListNode previous;
+
+    // Default constructor
+    public GroceryList() {
+        this.head = new ListNode();
+        this.current = head;
+        this.previous = null;
+    }
+
+    // Navigate to the next node
+    public void gotoNext() {
+        if (current.link != null) {
+            previous = current;
+            current = current.link;
+        }
+    }
+
+    // Get current item
+    public GroceryItem getCurrent() {
+        return current.data;
+    }
+
+    // Set current item
+    public void setCurrent(GroceryItem item) {
+        if (current != null && item != null) {
+            current.data = item;
+        }
+    }
+
+    // Add item to the end of the list
+    public void addItem(GroceryItem item) {
+        if (item == null) return;
+
+        ListNode newNode = new ListNode(item);
+        if (head.link == null) {
+            head.link = newNode; // Start the list
+        } else {
+            ListNode temp = head.link;
+            while (temp.link != null) {
+                temp = temp.link; // Traverse to the end
+            }
+            temp.link = newNode; // Add new node at the end
+        }
+    }
+
+    // Add item after current node
+    public void addItemAfterCurrent(GroceryItem item) {
+        if (item == null || current == null) return;
+
+        ListNode newNode = new ListNode(item);
+        newNode.link = current.link; // Link new node to the next
+        current.link = newNode; // Link current to new node
+    }
+
+    // Remove current node
+    public void removeCurrent() {
+        if (current == head) {
+            head.link = current.link; // Remove the head
+            current = head; // Reset current to head
+        } else if (previous != null) {
+            previous.link = current.link; // Bypass current node
+            current = previous.link; // Move current
+        }
+    }
+
+    // Show list
+    public void showList() {
+        ListNode temp = head.link; // Start from the first actual node
+        while (temp != null) {
+            System.out.println(temp.data);
+            temp = temp.link; // Move to next node
+        }
+    }
+
+    // Check if an item exists in the list
+    public boolean contains(GroceryItem item) {
+        ListNode temp = head.link;
+        while (temp != null) {
+            if (temp.data.equals(item)) {
+                return true;
+            }
+            temp = temp.link;
+        }
+        return false;
+    }
+
+    // Calculate total cost
+    public double totalCost() {
+        double total = 0.0;
+        ListNode temp = head.link; // Start from the first actual node
+        while (temp != null) {
+            total += temp.data.getValue();
+            temp = temp.link; // Move to next node
+        }
+        return total;
+    }
+}
