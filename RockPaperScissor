@@ -1,0 +1,100 @@
+/* 
+ * Brayden
+ */
+
+
+import java.util.Scanner;
+import java.util.Random;
+
+public class RcokPaperScissors {
+    private int userScore;
+    private int compScore;
+    private Scanner scanner;// Making ym scanners and score variables
+
+    public RcokPaperScissors() {
+        userScore = 0;
+        compScore = 0;//making sure when it starts both scores are 0
+        scanner = new Scanner(System.in);
+    }
+
+    public void playRound() {//Starting the game
+        Random random = new Random();
+
+        System.out.print("Enter your choice (Rock, Paper, Scissors): ");
+        String userChoice = scanner.nextLine().trim().toLowerCase();
+
+        String[] choices = {"rock", "paper", "scissors"};
+        String compChoice = choices[random.nextInt(choices.length)];
+
+        // Determining winner
+        if (userChoice.equals(compChoice)) {
+            System.out.println("It's a tie!");
+        } else if (userChoice.equals("rock")) {
+            if (compChoice.equals("paper")) {
+                System.out.println("Computer wins! Paper covers rock.");
+                compScore++;
+            } else {
+                System.out.println("You win! Rock smashes scissors.");
+                userScore++;
+            }
+        } else if (userChoice.equals("paper")) {
+            if (compChoice.equals("scissors")) {
+                System.out.println("Computer wins! Scissors cuts paper.");
+                compScore++;
+            } else {
+                System.out.println("You win! Paper covers rock.");
+                userScore++;
+            }
+        } else if (userChoice.equals("scissors")) {
+            if (compChoice.equals("rock")) {
+                System.out.println("Computer wins! Rock smashes scissors.");
+                compScore++;
+            } else {
+                System.out.println("You win! Scissors cuts paper.");
+                userScore++;
+            }
+        } else {
+            System.out.println("Invalid input! Computer wins this round.");
+            compScore++;
+        }
+    }
+
+    public void displayScores() {
+        System.out.println("User Score: " + userScore);//Showing the scores
+        System.out.println("Computer Score: " + compScore);
+    }
+
+    public void determineWinner() {//This is where the socres are decided
+        if (userScore > compScore) {
+            System.out.println("Congratulations! You win the game!");
+        } else if (userScore < compScore) {
+            System.out.println("Sorry! Computer wins the game!");
+        } else {
+            System.out.println("It's a tie game!");
+        }
+    }
+
+    public void playGame() {
+        System.out.println("Let's play Rock, Paper, Scissors!");
+        for (int i = 0; i < 3; i++) {
+            playRound();
+            displayScores();
+        }
+        determineWinner();
+
+        System.out.print("Do you want to play again? (yes/no): ");//Allowing the game go be played again if desired
+        String playAgain = scanner.nextLine().trim().toLowerCase();
+        if (playAgain.equals("yes")) {
+            userScore = 0;
+            compScore = 0;
+            playGame();
+        }
+    }
+
+    public static void main(String[] args) {
+        RcokPaperScissors game = new RcokPaperScissors();
+        game.playGame();
+        game.scanner.close(); // Close the scanner after the game is done
+    }
+}
+	
