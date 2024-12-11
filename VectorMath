@@ -1,0 +1,137 @@
+/*
+ * Brayden
+ */
+import java.util.Scanner;
+
+public class VectorMath {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+
+        while (running) {//This determines what kind of operaton we want to run
+            System.out.println("Welcome to the Vector Operations Program!");
+            System.out.println("Enter 1. To Add 2 Vectors");
+            System.out.println("Enter 2. To Subtract 2 Vectors");
+            System.out.println("Enter 3. To Find the Magnitude of a Vector");
+            System.out.println("Enter 9. To Quit");
+            System.out.print("Please enter your choice: ");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    performVectorAddition(scanner);
+                    break;
+                case 2:
+                    performVectorSubtraction(scanner);
+                    break;
+                case 3:
+                    performMagnitudeCalculation(scanner);
+                    break;
+                case 9:
+                    System.out.println("Goodbye! Thank you for using the Vector Operations Program.");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please enter a number between 1 and 9.");//This is to ensure w have a valid number and the code above is to allow them to exit
+            }
+        }
+        scanner.close();
+    }
+
+    private static void performVectorAddition(Scanner scanner) {//Our addition operation
+        System.out.println("Vector Addition");
+        System.out.print("Enter the size of the Vectors: ");
+        int size = scanner.nextInt();
+        if (size <= 0) {
+            System.out.println("Invalid size. The size must be greater than 0.");
+            return;
+        }
+
+        double[] vector1 = getVector(scanner, "Vector1", size);
+        double[] vector2 = getVector(scanner, "Vector2", size);
+
+        double[] result = new double[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = vector1[i] + vector2[i];
+        }
+
+        System.out.println("Result:");
+        printVector(vector1, " + ");
+        printVector(vector2, " = ");
+        printVector(result);
+    }
+
+    private static void performVectorSubtraction(Scanner scanner) {//Our subctraction operation
+        System.out.println("Vector Subtraction");
+        System.out.print("Enter the size of the Vectors: ");
+        int size = scanner.nextInt();
+        if (size <= 0) {
+            System.out.println("Invalid size. The size must be greater than 0.");
+            return;
+        }
+
+        double[] vector1 = getVector(scanner, "Vector1", size);
+        double[] vector2 = getVector(scanner, "Vector2", size);
+
+        double[] result = new double[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = vector1[i] - vector2[i];
+        }
+
+        System.out.println("Result:");
+        printVector(vector1, " - ");
+        printVector(vector2, " = ");
+        printVector(result);
+    }
+
+    private static void performMagnitudeCalculation(Scanner scanner) {//Magnitude
+        System.out.println("Magnitude Calculation");
+        System.out.print("Enter the size of the Vector: ");
+        int size = scanner.nextInt();
+        if (size <= 0) {
+            System.out.println("Invalid size. The size must be greater than 0.");
+            return;
+        }
+
+        double[] vector = getVector(scanner, "the Vector", size);
+
+        double sumOfSquares = 0;
+        for (double v : vector) {
+            sumOfSquares += v * v;
+        }
+        double magnitude = Math.sqrt(sumOfSquares);
+
+        System.out.printf("The magnitude of the vector is: ", magnitude);
+    }
+
+    private static double[] getVector(Scanner scanner, String name, int size) {
+        double[] vector = new double[size];
+        System.out.println("Enter values for " + name + ":");
+        for (int i = 0; i < size; i++) {
+            System.out.print("Value " + (i + 1) + ": ");
+            vector[i] = scanner.nextDouble();
+        }
+        return vector;
+    }
+
+    private static void printVector(double[] vector, String operator) {
+        for (int i = 0; i < vector.length; i++) {
+            System.out.print(vector[i]);
+            if (i < vector.length - 1) {
+                System.out.print(" ");
+            }
+        }
+        System.out.print(operator);
+    }
+
+    private static void printVector(double[] vector) {
+        for (int i = 0; i < vector.length; i++) {
+            System.out.print(vector[i]);
+            if (i < vector.length - 1) {
+                System.out.print(" ");
+            }
+        }
+        System.out.println();//Now we print thr results
+    }
+}
