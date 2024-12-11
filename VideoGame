@@ -1,0 +1,167 @@
+/*
+ * brayden RAA
+ */
+import java.io.*;
+import java.util.Scanner;
+
+
+class Game {
+    String title;
+    String console;
+
+    public Game(String title, String console) {
+        this.title = title;
+        this.console = console;
+    }
+
+    @Override
+    public String toString() {
+        return title + "\t" + console;
+    }
+}
+
+// Custom linked list to store games
+class GameList {
+    private Node head;
+
+    private class Node {
+        Game data;
+        Node next;
+
+        Node(Game data) {
+            this.data = data;
+        }
+    }
+
+    public void add(Game game) {
+        Node newNode = new Node(game);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+
+    public Game[] search(String titleQuery, String consoleQuery) {
+        Node current = head;
+        Game[] results = new Game[100]; // limit
+        int index = 0;
+
+        while (current != null) {
+            Game game = current.data;
+            boolean titleMatches = titleQuery.equals("*") || game.title.toLowerCase().contains(titleQuery.toLowerCase());
+            boolean consoleMatches = consoleQuery.equals("*") || game.console.toLowerCase().contains(consoleQuery.toLowerCase());
+
+            if (titleMatches && consoleMatches) {
+                if (index < results.length) { // don't exceed the results array
+                    results[index++] = game;
+                }
+            }
+            current = current.next;
+        }
+
+        Game[] trimmedResults = new Game[index];
+        System.arraycopy(results, 0, trimmedResults, 0, index);
+        return trimmedResults;
+    }
+
+    public void loadFromFile(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\t");
+                if (parts.length == 2) {
+                    add(new Game(parts[0].trim(), parts[1].trim()));
+                }
+            }
+            System.out.println("Games loaded successfully.");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
+    public void saveToFile(Game[] games, String filename, boolean append) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename, append))) {
+            for (Game game : games) {
+                if (game != null) {
+                    bw.write(game.toString());
+                    bw.newLine();
+                }
+            }
+            System.out.println("Results saved to file: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error writing to the file: " + e.getMessage());
+        }
+    }
+}
+
+public class VideoGameDatabase {
+    public static void main(String[] args) {
+        GameList gameList = new GameList();
+        Scanner scanner = new Scanner(System.in);
+        Game[] lastResults = new Game[0]; //  lastResults
+
+        while (true) {
+            System.out.println("\nWelcome to the Video Game Database!");
+            System.out.println("Enter 1 to load the video game database");
+            System.out.println("Enter 2 to search the database");
+            System.out.println("Enter 3 to print current results to the console");
+            System.out.println("Enter 4 to print current results to a file");
+            System.out.println("Enter 0 to quit");
+
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    System.out.print("Enter the file name: ");
+                    String filename = scanner.nextLine();
+                    gameList.loadFromFile(filename);
+                    break;
+                case "2":
+                    System.out.print("Enter the name of the game or '*' for all: ");
+                    String titleQuery = scanner.nextLine();
+                    System.out.print("Enter the name of the console or '*' for all: ");
+                    String consoleQuery = scanner.nextLine();
+                    lastResults = gameList.search(titleQuery, consoleQuery); // store results in lastResults
+                    if (lastResults.length == 0) {
+                        System.out.println("No results found.");
+                    } else {
+                        for (Game game : lastResults) {
+                            if (game != null) { // check if game is not null
+                                System.out.println(game);
+                            }
+                        }
+                    }
+                    break;
+                case "3":
+                    System.out.println("Current results are displayed above.");
+                    break;
+                case "4":
+                    if (lastResults.length == 0) {
+                        System.out.println("No results to save. Please perform a search first.");
+                        break;
+                    }
+                    System.out.print("Enter the file name to save results: ");
+                    String saveFilename = scanner.nextLine();
+                    System.out.print("Would you like to append? (true/false): ");
+                    boolean append = Boolean.parseBoolean(scanner.nextLine());
+                    gameList.saveToFile(lastResults, saveFilename, append);
+                    break;
+                case "0":
+                    System.out.println("Goodbye!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+}
+
