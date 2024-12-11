@@ -1,0 +1,50 @@
+/* 
+ * Brayden
+ */
+
+import java.util.Scanner;
+public class Temperature {
+	
+	public class TemperatureAnalyzer {
+	    public static void main(String[] args) {
+	       
+	        Scanner scanner = new Scanner(System.in);
+	        
+	        // This is where we get the temps we need
+	        System.out.println("Enter temperatures for 10 days:");
+	        
+	        // Array to store temps
+	        double[] temperatures = new double[10];
+	        
+	        // Input temps
+	        for (int i = 0; i < 10; i++) {
+	            System.out.print("Day " + (i + 1) + ": ");
+	            temperatures[i] = scanner.nextDouble();
+	        }
+	        
+	        // Calculate average temp
+	        double sum = 0;
+	        for (double temperature : temperatures) {
+	            sum += temperature;
+	        }
+	        double average = sum / temperatures.length;
+	        System.out.println("Average temperature: " + average);
+	        
+	        // Print tems that were below the average
+	        System.out.println("Temperatures below average:");
+	        boolean belowAverageExists = false;
+	        for (double temperature : temperatures) {
+	            if (temperature < average) {
+	                System.out.println(temperature);
+	                belowAverageExists = true;
+	            }
+	        }
+	        if (!belowAverageExists) {
+	            System.out.println("None");
+	        }
+	        
+	        // Close scanner sowe dont leak
+	        scanner.close();
+	    }
+	}
+}
